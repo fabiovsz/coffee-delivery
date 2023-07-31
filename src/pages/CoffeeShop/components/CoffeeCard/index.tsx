@@ -8,6 +8,7 @@ import {
   QuantityButton,
 } from './styles'
 import { ICoffee } from '../../../../coffees'
+import { useReducer } from 'react'
 
 interface CoffeeCardProps {
   coffee: ICoffee
@@ -15,6 +16,30 @@ interface CoffeeCardProps {
 
 export function CoffeeCard({ coffee }: CoffeeCardProps) {
   const imgSrc = `src/assets/coffees/${coffee.imgName}.png`
+
+  const [quantity, dispatch] = useReducer((state: any, action: any) => {
+    console.log(state)
+
+    if (action.type === 'ADD_COFFEE') {
+      return action.payload.quantity + 1
+    }
+
+    if (action.type === 'REMOVE_COFFEE') {
+      if (state > 0) {
+        return action.payload.quantity - 1
+      }
+    }
+
+    return state
+  }, 0)
+
+  function addCoffee() {
+    dispatch({ type: 'ADD_COFFEE', payload: { quantity } })
+  }
+
+  function removeCoffee() {
+    dispatch({ type: 'REMOVE_COFFEE', payload: { quantity } })
+  }
 
   return (
     <CoffeeCardContainer>
@@ -29,9 +54,13 @@ export function CoffeeCard({ coffee }: CoffeeCardProps) {
       <CoffeeCardFooter>
         R$ <span> {coffee.price}</span>
         <QuantityButton>
-          <Minus size={16} />
-          1
-          <Plus size={16} />
+          <button onClick={removeCoffee}>
+            <Minus size={16} />
+          </button>
+          {quantity}
+          <button onClick={addCoffee}>
+            <Plus size={16} />
+          </button>
         </QuantityButton>
         <CartButton>
           <ShoppingCartSimple size={20} weight="fill" />

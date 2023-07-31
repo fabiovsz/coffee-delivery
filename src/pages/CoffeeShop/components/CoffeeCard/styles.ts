@@ -77,6 +77,11 @@ export const QuantityButton = styled.div`
   svg {
     color: ${({ theme }) => theme.colors['brand-purple-dark']};
   }
+
+  button {
+    border: none;
+    background: none;
+  }
 `
 
 export const CartButton = styled.div`

@@ -89,7 +89,13 @@ export const CartButton = styled.div`
   padding: 0.5rem;
   background: ${({ theme }) => theme.colors['brand-purple-dark']};
   border-radius: 6px;
+
   svg {
     color: ${({ theme }) => theme.colors['base-white']};
+  }
+
+  button {
+    border: none;
+    background: none;
   }
 `

@@ -8,18 +8,22 @@ import {
   QuantityButton,
 } from './styles'
 import { ICoffee } from '../../../../coffees'
-import { useReducer } from 'react'
+import { useEffect, useReducer, useState } from 'react'
 
 interface CoffeeCardProps {
   coffee: ICoffee
 }
 
+interface ICoffeeCheckout extends ICoffee {
+  quantity: number
+}
+
 export function CoffeeCard({ coffee }: CoffeeCardProps) {
   const imgSrc = `src/assets/coffees/${coffee.imgName}.png`
 
-  const [quantity, dispatch] = useReducer((state: any, action: any) => {
-    console.log(state)
+  const [checkoutItems, setCheckoutItems] = useState<ICoffeeCheckout[]>([])
 
+  const [quantity, dispatch] = useReducer((state: any, action: any) => {
     if (action.type === 'ADD_COFFEE') {
       return action.payload.quantity + 1
     }
@@ -39,6 +43,21 @@ export function CoffeeCard({ coffee }: CoffeeCardProps) {
 
   function removeCoffee() {
     dispatch({ type: 'REMOVE_COFFEE', payload: { quantity } })
+  }
+  function logArr() {
+    console.log(checkoutItems)
+  }
+
+  function addToCart(coffee: ICoffee, quantity: number) {
+    setCheckoutItems(
+      checkoutItems.map((item) => {
+        if (item.id === coffee.id) {
+          return { ...item, quantity: item.quantity + quantity }
+        } else {
+          return item
+        }
+      }),
+    )
   }
 
   return (
@@ -63,9 +82,12 @@ export function CoffeeCard({ coffee }: CoffeeCardProps) {
           </button>
         </QuantityButton>
         <CartButton>
-          <ShoppingCartSimple size={20} weight="fill" />
+          <button onClick={() => addToCart(coffee, quantity)}>
+            <ShoppingCartSimple size={20} weight="fill" />
+          </button>
         </CartButton>
       </CoffeeCardFooter>
+      <button onClick={() => logArr()}>click</button>
     </CoffeeCardContainer>
   )
 }
